@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analysis of A* vs Dijkstra for Emergency Vehicle Routing</title>
+  <meta name="description" content="A* vs Dijkstra for emergency vehicle routing on grid maps, with figures, results, and downloads.">
+  
+
+
+<style>
+:root {
+  --bg: #0b0f14; --card: #111826; --muted: #9fb0c8; --text: #e8f0ff;
+  --accent: #60a5fa; --accent-2: #34d399; --border: #223041;
+}
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; background:var(--bg); color:var(--text);
+  font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+header.card { background: linear-gradient(180deg, rgba(96,165,250,.18), rgba(71,85,105,.08));
+  border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin: 24px 0; }
+h1 { font-size: 1.9rem; margin: 0 0 6px; letter-spacing: .2px; }
+.subtitle { color: var(--muted); margin: 0 0 12px; }
+.authors { margin: 12px 0 0; color: var(--muted); }
+.authors a { color: var(--muted); }
+nav { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.btn { display:inline-flex; align-items:center; gap:.5rem; background: #0f172a; border:1px solid var(--border);
+  padding:10px 14px; border-radius: 12px; color: var(--text); text-decoration: none; }
+.btn:hover { border-color: var(--accent); }
+section.card { background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 24px; margin: 18px 0; }
+h2 { font-size: 1.4rem; margin-top: 0; }
+.grid-figs { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 16px; }
+figure { background:#0c1320; border:1px solid var(--border); border-radius:12px; padding:12px; margin:0; }
+img { width:100%; height:auto; border-radius:8px; display:block; }
+figcaption { font-size:.9rem; color: var(--muted); margin-top: 8px; }
+.tbl { width:100%; border-collapse: collapse; overflow:auto; }
+.tbl th, .tbl td { border:1px solid var(--border); padding:10px 12px; text-align:center; }
+.tbl thead th { background:#0f172a; }
+.tbl .sub th { background:#0f172a; color: var(--muted); font-weight: normal; }
+.callout { background: #0f172a; border:1px dashed var(--border); border-radius:12px; padding:12px 14px; color:var(--muted); }
+footer { color: var(--muted); text-align:center; margin: 24px 0 60px; }
+code, pre { background:#0f172a; border:1px solid var(--border); border-radius:8px; padding:2px 6px; }
+pre { padding: 12px; overflow:auto; }
+/* Anchor wrapper for figures */
+a.figlink{display:block;color:inherit;text-decoration:none}
+a.figlink figure:hover{border-color:#60a5fa}
+
+.chart-select{background:#0c1320;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:6px 10px}
+.chart-select:focus{outline:2px solid #60a5fa;outline-offset:1px}
+</style>
+
+</head>
+<body>
+  <div class="wrap">
+    <header class="card">
+      <h1>Analysis of A* vs Dijkstra for Emergency Vehicle Routing</h1>
+      <p class="subtitle">CS5800 Project</p>
+      <p class="authors">
+        Sean Ando ·
+        Ngoc Khanh Vy Le ·
+        Divit Pratap Singh ·
+        Aayushi Saraswat ·
+        Zuzu Nyirakanyange
+      </p>
+      <nav>
+        <a class="btn" href="#abstract">Abstract</a>
+        <a class="btn" href="#results">Results (8×8 Grid)</a>
+        <a class="btn" href="#figures">Figures (8×8 Grid)</a>
+        <a class="btn" href="#results30">Results (30×30 Grid)</a>
+        <a class="btn" href="#figures30">Figures (30×30 Grid)</a>
+        <a class="btn" href="#downloads">Downloads</a>
+      </nav>
+    </header>
+
+    <section id="abstract" class="card">
+      <h2>Abstract</h2>
+      <p>We evaluate the <strong>A*</strong> search algorithm for emergency vehicle routing
+      on grid-based urban maps and compare it against Dijkstra’s algorithm. The study
+      tests three conditions—0%, ~20%, and ~50% obstacle density—measuring expanded
+      nodes and computation time. We use a Manhattan-distance heuristic for A*, which
+      is admissible and returns optimal shortest paths on 4-neighborhood grids.</p>
+      <div class="callout">
+        <strong>Heuristic:</strong> Manhattan distance (admissible & consistent on 4-way grids).
+        <strong>Goal:</strong> minimize expansions and compute time while preserving optimality.
+      </div>
+    </section>
+
+    <section id="results" class="card">
+      <h2>Results (8×8 Grid)</h2>
+<div class="card" style="background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
+  <div style="display:flex;gap:.6rem;align-items:center">
+    <label for="metric8"><strong>Metric:</strong></label>
+    <select id="metric8" class="chart-select">
+      <option value="ExpandedNodes">Expanded Nodes</option>
+      <option value="TimeSec">Time (sec)</option>
+    </select>
+    <span style="color:var(--muted)">Grouped bars compare A* vs Dijkstra.</span>
+  </div>
+  <canvas id="chart8" width="980" height="360" style="max-width:100%;margin-top:10px;display:block"></canvas>
+  <div class="legend" style="margin-top:8px;color:var(--muted)">
+    <span style="display:inline-block;width:10px;height:10px;background:#4f83ff;border-radius:2px;margin-right:6px"></span>A* &nbsp;&nbsp;
+    <span style="display:inline-block;width:10px;height:10px;background:#34d399;border-radius:2px;margin-right:6px"></span>Dijkstra
+  </div>
+</div>
+      
+<table class="tbl">
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Obstacles</th>
+      <th>Free Cells</th>
+      <th colspan="2">A*</th>
+      <th colspan="2">Dijkstra</th>
+    </tr>
+    <tr class="sub">
+      <th></th><th></th><th></th>
+      <th>Expanded</th><th>Time</th>
+      <th>Expanded</th><th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+        <tr>
+          <td>No Obstacles (0%)</td>
+          <td>0.0%</td>
+          <td>100.0%</td>
+          <td>14</td>
+          <td>0.000021s</td>
+          <td>63</td>
+          <td>0.000109s</td>
+        </tr>
+        
+
+        <tr>
+          <td>Moderate Obstacles (20%)</td>
+          <td>15.6%</td>
+          <td>84.4%</td>
+          <td>15</td>
+          <td>0.000078s</td>
+          <td>53</td>
+          <td>0.000174s</td>
+        </tr>
+        
+
+        <tr>
+          <td>High Obstacles (50%)</td>
+          <td>42.2%</td>
+          <td>57.8%</td>
+          <td>25</td>
+          <td>0.000068s</td>
+          <td>34</td>
+          <td>0.000075s</td>
+        </tr>
+        
+  </tbody>
+</table>
+
+    </section>
+
+    <section id="figures" class="card">
+      <h2>Figures (8×8 Grid)</h2>
+      <div class="grid-figs">
+    <a class="figlink" href="viewer.html?src=images%2Fastar_0.png&alt=No+Obstacles+%280%25%29+%E2%80%94+A%2A" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/astar_0.png" alt="No Obstacles (0%) — A*" loading="lazy">
+        <figcaption>No Obstacles (0%) — A*</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fastar_20.png&alt=20%25+Obstacles+%E2%80%94+A%2A" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/astar_20.png" alt="20% Obstacles — A*" loading="lazy">
+        <figcaption>20% Obstacles — A*</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fastar_50.png&alt=50%25+Obstacles+%E2%80%94+A%2A" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/astar_50.png" alt="50% Obstacles — A*" loading="lazy">
+        <figcaption>50% Obstacles — A*</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fdijkstra_0.png&alt=No+Obstacles+%280%25%29+%E2%80%94+Dijkstra" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/dijkstra_0.png" alt="No Obstacles (0%) — Dijkstra" loading="lazy">
+        <figcaption>No Obstacles (0%) — Dijkstra</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fdijkstra_20.png&alt=20%25+Obstacles+%E2%80%94+Dijkstra" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/dijkstra_20.png" alt="20% Obstacles — Dijkstra" loading="lazy">
+        <figcaption>20% Obstacles — Dijkstra</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fdijkstra_50.png&alt=50%25+Obstacles+%E2%80%94+Dijkstra" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/dijkstra_50.png" alt="50% Obstacles — Dijkstra" loading="lazy">
+        <figcaption>50% Obstacles — Dijkstra</figcaption>
+      </figure>
+    </a>
+    </div>
+    </section>
+
+    <section id="results30" class="card">
+      <h2>Additional Tests: Results (30×30 Grid)</h2>
+<div class="card" style="background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
+  <div style="display:flex;gap:.6rem;align-items:center">
+    <label for="metric30"><strong>Metric:</strong></label>
+    <select id="metric30" class="chart-select">
+      <option value="ExpandedNodes">Expanded Nodes</option>
+      <option value="TimeSec">Time (sec)</option>
+    </select>
+    <span style="color:var(--muted)">Grouped bars compare A* vs Dijkstra.</span>
+  </div>
+  <canvas id="chart30" width="980" height="360" style="max-width:100%;margin-top:10px;display:block"></canvas>
+  <div class="legend" style="margin-top:8px;color:var(--muted)">
+    <span style="display:inline-block;width:10px;height:10px;background:#4f83ff;border-radius:2px;margin-right:6px"></span>A* &nbsp;&nbsp;
+    <span style="display:inline-block;width:10px;height:10px;background:#34d399;border-radius:2px;margin-right:6px"></span>Dijkstra
+  </div>
+</div>
+      
+<table class="tbl">
+  <thead>
+    <tr>
+      <th>Scenario (30×30 Grid)</th>
+      <th>Obstacles</th>
+      <th>Free Cells</th>
+      <th colspan="2">A*</th>
+      <th colspan="2">Dijkstra</th>
+    </tr>
+    <tr class="sub">
+      <th></th><th></th><th></th>
+      <th>Expanded</th><th>Time</th>
+      <th>Expanded</th><th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+        <tr>
+          <td>No Obstacles (0%)</td>
+          <td>0.0%</td>
+          <td>100.0%</td>
+          <td>59</td>
+          <td>0.000108s</td>
+          <td>899</td>
+          <td>0.001187s</td>
+        </tr>
+        
+
+        <tr>
+          <td>Moderate Obstacles (20%)</td>
+          <td>20.7%</td>
+          <td>79.3%</td>
+          <td>78</td>
+          <td>0.000314s</td>
+          <td>710</td>
+          <td>0.002126s</td>
+        </tr>
+        
+
+        <tr>
+          <td>High Obstacles (50%)</td>
+          <td>47.3%</td>
+          <td>52.7%</td>
+          <td>111</td>
+          <td>0.000155s</td>
+          <td>208</td>
+          <td>0.000288s</td>
+        </tr>
+        
+  </tbody>
+</table>
+
+    </section>
+
+<section id="quant" class="card">
+  <h2>Quantitative Analysis of A* and Dijkstra</h2>
+  <div class="card" style="background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px">
+    <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+      <label for="qaMetric"><strong>View:</strong></label>
+      <select id="qaMetric" class="chart-select">
+        <option value="speed_nodes">Speedup: Nodes (D / A)</option>
+        <option value="speed_time">Speedup: Time (D / A)</option>
+        <option value="red_nodes">Reduction%: Nodes</option>
+        <option value="red_time">Reduction%: Time</option>
+        <option value="scale_nodes">Scale‑up: Nodes (30×30 / 8×8)</option>
+        <option value="scale_time">Scale‑up: Time (30×30 / 8×8)</option>
+        <option value="pooled">Pooled Speedup (across 6 conditions)</option>
+      </select>
+    </div>
+    <canvas id="qaChart" width="1100" height="360" style="max-width:100%;margin-top:10px;display:block"></canvas>
+    <div class="legend" id="qaLegend" style="margin-top:8px;color:var(--muted)"></div>
+    <div id="qaTables" class="qa-tables" style="margin-top:12px"></div>
+  </div>
+</section>
+
+
+
+    <section id="figures30" class="card">
+      <h2>Additional Tests: Figures (30×30 Grid)</h2>
+      <div class="grid-figs">
+    <a class="figlink" href="viewer.html?src=images%2Fastar_30_0.png&alt=No+Obstacles+%280%25%29+%E2%80%94+A%2A+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/astar_30_0.png" alt="No Obstacles (0%) — A* (30×30 Grid)" loading="lazy">
+        <figcaption>No Obstacles (0%) — A*</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fastar_30_20.png&alt=20%25+Obstacles+%E2%80%94+A%2A+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/astar_30_20.png" alt="20% Obstacles — A* (30×30 Grid)" loading="lazy">
+        <figcaption>20% Obstacles — A*</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fastar_30_50.png&alt=50%25+Obstacles+%E2%80%94+A%2A+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/astar_30_50.png" alt="50% Obstacles — A* (30×30 Grid)" loading="lazy">
+        <figcaption>50% Obstacles — A*</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fdijkstra_30_0.png&alt=No+Obstacles+%280%25%29+%E2%80%94+Dijkstra+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/dijkstra_30_0.png" alt="No Obstacles (0%) — Dijkstra (30×30 Grid)" loading="lazy">
+        <figcaption>No Obstacles (0%) — Dijkstra</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fdijkstra_30_20.png&alt=20%25+Obstacles+%E2%80%94+Dijkstra+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/dijkstra_30_20.png" alt="20% Obstacles — Dijkstra (30×30 Grid)" loading="lazy">
+        <figcaption>20% Obstacles — Dijkstra</figcaption>
+      </figure>
+    </a>
+    
+
+    <a class="figlink" href="viewer.html?src=images%2Fdijkstra_30_50.png&alt=50%25+Obstacles+%E2%80%94+Dijkstra+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
+      <figure class="zoomable">
+        <img src="images/dijkstra_30_50.png" alt="50% Obstacles — Dijkstra (30×30 Grid)" loading="lazy">
+        <figcaption>50% Obstacles — Dijkstra</figcaption>
+      </figure>
+    </a>
+    </div>
+    </section>
+
+    
+
+<section id="downloads" class="card">
+  <h2>Downloads & Data</h2>
+  <ul> 
+    <li>Full paper · <a href="assets/A_Implementation_and_Analysis_for_Emergency_Vehicle_Routing_Report.pdf" download>PDF</a></li>
+        <li>All raw data · <a href="assets/raw_data_txt.zip" download>ZIP</a></li>
+  </ul>
+
+  <h3>8×8 Grid Cases</h3>
+  <ul>
+    <li>Case 1 raw results · <a href="images/astar_0.png" download>A* figure</a> · <a href="images/dijkstra_0.png" download>Dijkstra figure</a> · <a href="assets/astar_dijkstra_case_1.txt" download>Data</a></li>
+<li>Case 2 raw results · <a href="images/astar_20.png" download>A* figure</a> · <a href="images/dijkstra_20.png" download>Dijkstra figure</a> · <a href="assets/astar_dijkstra_case_2.txt" download>Data</a></li>
+<li>Case 3 raw results · <a href="images/astar_50.png" download>A* figure</a> · <a href="images/dijkstra_50.png" download>Dijkstra figure</a> · <a href="assets/astar_dijkstra_case_3.txt" download>Data</a></li>
+  </ul>
+
+  <h3>30×30 Grid Cases</h3>
+  <ul>
+    <li>Case 1 raw results · <a href="images/astar_30_0.png" download>A* figure</a> · <a href="images/dijkstra_30_0.png" download>Dijkstra figure</a> · <a href="assets/large_astar_dijkstra_case_1.txt" download>Data</a></li>
+<li>Case 2 raw results · <a href="images/astar_30_20.png" download>A* figure</a> · <a href="images/dijkstra_30_20.png" download>Dijkstra figure</a> · <a href="assets/large_astar_dijkstra_case_2.txt" download>Data</a></li>
+<li>Case 3 raw results · <a href="images/astar_30_50.png" download>A* figure</a> · <a href="images/dijkstra_30_50.png" download>Dijkstra figure</a> · <a href="assets/large_astar_dijkstra_case_3.txt" download>Data</a></li>
+  </ul>
+</section>
+
+
+
+    <footer>
+      © 2025 Sean. Built as CS5800 Project.
+    </footer>
+  </div>
+
+<script>
+(function(){
+  // Parse a results table inside a section (8x8 or 30x30)
+  function toNumber(x){
+    if (typeof x === 'number') return x;
+    if (!x) return NaN;
+    const s = String(x).replace(/[^0-9eE\.\-]+/g, ''); // strip %, s, etc.
+    return parseFloat(s);
+  }
+  function parseTable(sectionId){
+    const sec = document.getElementById(sectionId);
+    if(!sec) return [];
+    const tbl = sec.querySelector('table');
+    if(!tbl) return [];
+    const rows = Array.from(tbl.querySelectorAll('tbody tr'));
+    const data = [];
+    rows.forEach(tr => {
+      const tds = Array.from(tr.children).map(td => td.textContent.trim());
+      const scenario = tds[0];
+      const aExpanded = toNumber(tds[3]);
+      const aTime     = toNumber(tds[4]);
+      const dExpanded = toNumber(tds[5]);
+      const dTime     = toNumber(tds[6]);
+      data.push({Scenario:scenario, Algorithm:'A*', ExpandedNodes:aExpanded, TimeSec:aTime});
+      data.push({Scenario:scenario, Algorithm:'Dijkstra', ExpandedNodes:dExpanded, TimeSec:dTime});
+    });
+    return data;
+  }
+
+  // Nice 1-2-5 tick step
+  function niceStep(max, wanted){
+    if(!isFinite(max) || max <= 0) return 1;
+    const step0 = max / Math.max(1, wanted);
+    const p10 = Math.pow(10, Math.floor(Math.log10(step0)));
+    const err = step0 / p10;
+    if (err >= 5) return 5*p10;
+    if (err >= 2) return 2*p10;
+    return p10;
+  }
+
+  function makeBarChart(canvasId, selectId, DATA){
+    const canvas = document.getElementById(canvasId);
+    const select = document.getElementById(selectId);
+    if(!canvas || !select) return;
+    const ctx = canvas.getContext('2d');
+
+    function draw(metric){
+      // HiDPI scaling
+      const DPR = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || canvas.width;
+      const cssH = canvas.clientHeight || canvas.height;
+      canvas.width = Math.max(1, Math.floor(cssW * DPR));
+      canvas.height = Math.max(1, Math.floor(cssH * DPR));
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(DPR, DPR);
+
+      const W = cssW, H = cssH;
+      let padR = 20, padT = 22, padB = 48;
+      let padL = 60; // provisional; adjusted after measuring labels
+
+      // Build groups per scenario
+      const scenarios = [...new Set(DATA.map(d=>d.Scenario))];
+      const groups = scenarios.map(sc => ({
+        scenario: sc,
+        a: Number((DATA.find(d=>d.Scenario===sc && d.Algorithm==='A*')||{})[metric]) || 0,
+        d: Number((DATA.find(d=>d.Scenario===sc && d.Algorithm==='Dijkstra')||{})[metric]) || 0
+      }));
+
+      // Axis limits
+      const vals = groups.flatMap(g=>[g.a,g.d]);
+      const maxRaw = Math.max(...vals, 0);
+      let step = niceStep(maxRaw, 4);
+      let ymax = Math.max(step, Math.ceil(maxRaw / step) * step);
+      let ticksCount = Math.round(ymax / step);
+
+      // Measure tick labels to set left padding
+      ctx.font = '12px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial';
+      let maxLabelW = 0;
+      for(let i=0;i<=ticksCount;i++){
+        const v = i * step;
+        const s = (metric==='TimeSec' ? v.toFixed(6) : String(Math.round(v)));
+        const w = ctx.measureText(s).width;
+        if (w > maxLabelW) maxLabelW = w;
+      }
+      padL = Math.max(60, Math.ceil(maxLabelW) + 16);
+      const chartW = Math.max(1, W - padL - padR);
+      const chartH = Math.max(1, H - padT - padB);
+
+      // Clear & styles
+      ctx.clearRect(0,0,W,H);
+      const border = getComputedStyle(document.documentElement).getPropertyValue('--border') || '#223041';
+      const muted  = getComputedStyle(document.documentElement).getPropertyValue('--muted') || '#9fb0c8';
+      const fg     = getComputedStyle(document.body).color || '#e8f0ff';
+
+      // Axes + grid
+      ctx.strokeStyle = border; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+chartH); ctx.lineTo(padL+chartW, padT+chartH); ctx.stroke();
+      ctx.fillStyle = muted; ctx.textAlign='right';
+      for(let i=0;i<=ticksCount;i++){
+        const y = padT + chartH - (i/ticksCount)*chartH;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+chartW, y); ctx.stroke();
+        const val = i * step;
+        const label = (metric==='TimeSec' ? val.toFixed(6) : String(Math.round(val)));
+        ctx.fillText(label, padL-6, y+4);
+      }
+
+      // Bars
+      const colA = '#4f83ff', colD = '#34d399';
+      const n = scenarios.length;
+      const groupW = chartW / Math.max(1, n);
+      const barW = Math.min(28, Math.max(6, (groupW - 20)/2));
+      ctx.textAlign = 'center';
+      groups.forEach((g,i)=>{
+        const gx = padL + i*groupW + groupW/2;
+        const hA = (g.a / ymax) * chartH;
+        const hD = (g.d / ymax) * chartH;
+        ctx.fillStyle = colA; ctx.fillRect(gx - barW - 4, padT + chartH - hA, barW, hA);
+        ctx.fillStyle = colD; ctx.fillRect(gx + 4, padT + chartH - hD, barW, hD);
+        ctx.fillStyle = muted; ctx.fillText(g.scenario, gx, H - 10);
+      });
+
+      // Title
+      ctx.textAlign = 'left'; ctx.fillStyle = fg;
+      ctx.fillText(metric==='TimeSec' ? 'Computation Time (sec)' : 'Expanded Nodes', padL, 16);
+    }
+
+    select.addEventListener('change', ()=> draw(select.value));
+    draw(select.value);
+    window.addEventListener('resize', ()=> draw(select.value));
+  }
+
+  // Build datasets from tables and render
+  const DATA8  = parseTable('results');
+  const DATA30 = parseTable('results30');
+  makeBarChart('chart8','metric8',DATA8);
+  makeBarChart('chart30','metric30',DATA30);
+})();
+</script>
+
+
+<script>
+(function(){
+  // Validated constants (from your message)
+  const RAW = {
+    '8x8': {
+      'No Obstacles (0%)':    {A_nodes:14, A_time:0.000021, D_nodes:63,  D_time:0.000109},
+      'Moderate Obstacles (20%)': {A_nodes:15, A_time:0.000078, D_nodes:53,  D_time:0.000174},
+      'High Obstacles (50%)': {A_nodes:25, A_time:0.000068, D_nodes:34,  D_time:0.000075}
+    },
+    '30x30': {
+      'No Obstacles (0%)':    {A_nodes:59, A_time:0.000108, D_nodes:899, D_time:0.001187},
+      'Moderate Obstacles (20%)': {A_nodes:78, A_time:0.000314, D_nodes:710, D_time:0.002126},
+      'High Obstacles (50%)': {A_nodes:111, A_time:0.000155, D_nodes:208, D_time:0.000288}
+    }
+  };
+
+  function toNumber(x){
+    if (typeof x === 'number') return x;
+    if (!x) return 0;
+    const s = String(x).replace(/[^0-9eE\.\-]+/g, '');
+    const v = parseFloat(s);
+    return Number.isFinite(v) ? v : 0;
+  }
+  function normalizeScenario(s){
+    const t = (s||'').toLowerCase();
+    const m = t.match(/(\d+)%/);
+    if(m){
+      const pct = parseInt(m[1],10);
+      if(pct===0)  return 'No Obstacles (0%)';
+      if(pct===20) return 'Moderate Obstacles (20%)';
+      if(pct===50) return 'High Obstacles (50%)';
+    }
+    if(t.includes('no obstacle')) return 'No Obstacles (0%)';
+    if(t.includes('moderate') || t.includes('20%')) return 'Moderate Obstacles (20%)';
+    if(t.includes('high') || t.includes('50%')) return 'High Obstacles (50%)';
+    return s;
+  }
+  function parseTable(sectionId){
+    const sec = document.getElementById(sectionId);
+    if(!sec) return [];
+    const tbl = sec.querySelector('table');
+    if(!tbl) return [];
+    const rows = Array.from(tbl.querySelectorAll('tbody tr'));
+    const data = [];
+    rows.forEach(tr => {
+      const td = Array.from(tr.children).map(t => t.textContent.trim());
+      let scenario = normalizeScenario(td[0]);
+      const aNodes   = toNumber(td[3]);
+      const aTime    = toNumber(td[4]);
+      const dNodes   = toNumber(td[5]);
+      const dTime    = toNumber(td[6]);
+      data.push({Scenario:scenario, Algorithm:'A*', ExpandedNodes:aNodes, TimeSec:aTime});
+      data.push({Scenario:scenario, Algorithm:'Dijkstra', ExpandedNodes:dNodes, TimeSec:dTime});
+    });
+    return data;
+  }
+  function group(DATA){
+    const m = {}; DATA.forEach(d => (m[d.Scenario] ||= {})[d.Algorithm] = d); return m;
+  }
+  function fromTablesOrFallback(){
+    const d8 = group(parseTable('results'));
+    const d30 = group(parseTable('results30'));
+    const ok = Object.keys(d8).length >= 3 && Object.keys(d30).length >= 3;
+    if(!ok){
+      const d8c={}, d30c={};
+      for(const s in RAW['8x8']){
+        d8c[s] = {'A*':{ExpandedNodes:RAW['8x8'][s].A_nodes, TimeSec:RAW['8x8'][s].A_time},
+                  'Dijkstra':{ExpandedNodes:RAW['8x8'][s].D_nodes, TimeSec:RAW['8x8'][s].D_time}};
+      }
+      for(const s in RAW['30x30']){
+        d30c[s] = {'A*':{ExpandedNodes:RAW['30x30'][s].A_nodes, TimeSec:RAW['30x30'][s].A_time},
+                   'Dijkstra':{ExpandedNodes:RAW['30x30'][s].D_nodes, TimeSec:RAW['30x30'][s].D_time}};
+      }
+      return {d8:d8c, d30:d30c};
+    }
+    return {d8, d30};
+  }
+  function niceStep(max, wanted){
+    if(!(max>0)) return 1;
+    const base = max / Math.max(1, wanted);
+    const p10 = Math.pow(10, Math.floor(Math.log10(base)));
+    const err = base / p10;
+    if (err >= 5) return 5*p10;
+    if (err >= 2) return 2*p10;
+    return p10;
+  }
+  function compute(d8, d30){
+    const order = ['No Obstacles (0%)','Moderate Obstacles (20%)','High Obstacles (50%)'];
+    const get = (g,s,a,k) => Number(((g[s]||{})[a]||{})[k])||0;
+    const labels_speed=[], speed_nodes=[], speed_time=[], red_nodes=[], red_time=[];
+    const An8=[], An30=[], Dn8=[], Dn30=[], At8=[], At30=[], Dt8=[], Dt30=[];
+    order.forEach(s=>{
+      const an8=get(d8,s,'A*','ExpandedNodes'), at8=get(d8,s,'A*','TimeSec');
+      const dn8=get(d8,s,'Dijkstra','ExpandedNodes'), dt8=get(d8,s,'Dijkstra','TimeSec');
+      const an30=get(d30,s,'A*','ExpandedNodes'), at30=get(d30,s,'A*','TimeSec');
+      const dn30=get(d30,s,'Dijkstra','ExpandedNodes'), dt30=get(d30,s,'Dijkstra','TimeSec');
+      labels_speed.push('8×8 · '+(s.includes('No')?'0%':(s.includes('Moderate')?'20%':'50%')));
+      speed_nodes.push(dn8/an8); speed_time.push(dt8/at8);
+      red_nodes.push((1 - an8/dn8)*100); red_time.push((1 - at8/dt8)*100);
+      labels_speed.push('30×30 · '+(s.includes('No')?'0%':(s.includes('Moderate')?'20%':'50%')));
+      speed_nodes.push(dn30/an30); speed_time.push(dt30/at30);
+      red_nodes.push((1 - an30/dn30)*100); red_time.push((1 - at30/dt30)*100);
+      An8.push(an8); At8.push(at8); Dn8.push(dn8); Dt8.push(dt8);
+      An30.push(an30); At30.push(at30); Dn30.push(dn30); Dt30.push(dt30);
+    });
+    const mean = a => a.reduce((x,y)=>x+y,0)/a.length;
+    const scaleLabels = ['0%','20%','50%','Balanced'];
+    const scale_nodes = { labels:scaleLabels,
+      A:[An30[0]/An8[0], An30[1]/An8[1], An30[2]/An8[2], mean(An30)/mean(An8)],
+      D:[Dn30[0]/Dn8[0], Dn30[1]/Dn8[1], Dn30[2]/Dn8[2], mean(Dn30)/mean(Dn8)] };
+    const scale_time = { labels:scaleLabels,
+      A:[At30[0]/At8[0], At30[1]/At8[1], At30[2]/At8[2], mean(At30)/mean(At8)],
+      D:[Dt30[0]/Dt8[0], Dt30[1]/Dt8[1], Dt30[2]/Dt8[2], mean(Dt30)/mean(Dt8)] };
+    const sum = a => a.reduce((x,y)=>x+y,0);
+    const pooled = { labels:['Nodes speedup (D/A)','Time speedup (D/A)'],
+      values:[ (sum(Dn8)+sum(Dn30)) / (sum(An8)+sum(An30)), (sum(Dt8)+sum(Dt30)) / (sum(At8)+sum(At30)) ],
+      totals:{ A_nodes:sum(An8)+sum(An30), D_nodes:sum(Dn8)+sum(Dn30), A_time:sum(At8)+sum(At30), D_time:sum(Dt8)+sum(Dt30) } };
+    return {labels_speed,speed_nodes,speed_time,red_nodes,red_time,scale_nodes,scale_time,pooled,
+            per8:buildPer(order,An8,At8,Dn8,Dt8), per30:buildPer(order,An30,At30,Dn30,Dt30),
+            scaleRows:{A:scaleLabels.map((lab,i)=>({Scenario:lab,Nodes:scale_nodes.A[i],Time:scale_time.A[i]})),
+                       D:scaleLabels.map((lab,i)=>({Scenario:lab,Nodes:scale_nodes.D[i],Time:scale_time.D[i]}))}};
+  }
+  function buildPer(order, A_nodes, A_time, D_nodes, D_time){
+    return order.map((s,i)=>({ Scenario:s,
+      A_nodes:A_nodes[i], D_nodes:D_nodes[i], S_nodes:D_nodes[i]/A_nodes[i], R_nodes:(1 - A_nodes[i]/D_nodes[i])*100,
+      A_time:A_time[i], D_time:D_time[i], S_time:D_time[i]/A_time[i], R_time:(1 - A_time[i]/D_time[i])*100 }));
+  }
+  function buildTable(headers, rows, fmt){
+    function F(k,v){ return fmt&&fmt[k] ? fmt[k](v) : (v==null||Number.isNaN(v)?'':String(v)); }
+    const thead = '<thead><tr>'+headers.map(h=>'<th>'+ (h.label||h) +'</th>').join('')+'</tr></thead>';
+    const body = '<tbody>'+rows.map(r=>'<tr>'+headers.map(h=>{
+      const k = h.key||h; return '<td>'+F(k, r[k])+'</td>';}).join('')+'</tr>').join('')+'</tbody>';
+    return '<table>'+thead+body+'</table>';
+  }
+  function drawChart(canvasId, selectId, QA){
+    const canvas = document.getElementById(canvasId);
+    const select = document.getElementById(selectId);
+    const legend = document.getElementById('qaLegend');
+    const tablesDiv = document.getElementById('qaTables');
+    const ctx = canvas.getContext('2d');
+    const COL_A='#4f83ff', COL_D='#34d399';
+
+    function nice(max,w){ if(!(max>0)) return 1; const base=max/Math.max(1,w);
+      const p10=Math.pow(10,Math.floor(Math.log10(base))); const e=base/p10;
+      return e>=5?5*p10:(e>=2?2*p10:p10);}
+
+    function render(view){
+      const DPR = window.devicePixelRatio||1, cssW=canvas.clientWidth||canvas.width, cssH=canvas.clientHeight||canvas.height;
+      canvas.width = Math.max(1, Math.floor(cssW*DPR)); canvas.height = Math.max(1, Math.floor(cssH*DPR));
+      ctx.setTransform(1,0,0,1,0,0); ctx.scale(DPR,DPR);
+
+      let labels=[], series=[], title='', yfmt='num';
+      if(view==='speed_nodes'){ labels=QA.labels_speed; series=[{name:'Speedup (D/A)', col:COL_A, vals:QA.speed_nodes}]; title='A* vs Dijkstra — Nodes Speedup'; yfmt='num2'; }
+      else if(view==='speed_time'){ labels=QA.labels_speed; series=[{name:'Speedup (D/A)', col:COL_A, vals:QA.speed_time}]; title='A* vs Dijkstra — Time Speedup'; yfmt='num2'; }
+      else if(view==='red_nodes'){ labels=QA.labels_speed; series=[{name:'Reduction%', col:COL_A, vals:QA.red_nodes}]; title='A* Percent Reduction in Nodes'; yfmt='pct1'; }
+      else if(view==='red_time'){ labels=QA.labels_speed; series=[{name:'Reduction%', col:COL_A, vals:QA.red_time}]; title='A* Percent Reduction in Time'; yfmt='pct1'; }
+      else if(view==='scale_nodes'){ labels=QA.scale_nodes.labels; series=[{name:'A*', col:COL_A, vals:QA.scale_nodes.A},{name:'Dijkstra', col:COL_D, vals:QA.scale_nodes.D}]; title='Scale‑up (30×30 / 8×8) — Nodes'; yfmt='num2'; }
+      else if(view==='scale_time'){ labels=QA.scale_time.labels; series=[{name:'A*', col:COL_A, vals:QA.scale_time.A},{name:'Dijkstra', col:COL_D, vals:QA.scale_time.D}]; title='Scale‑up (30×30 / 8×8) — Time'; yfmt='num2'; }
+      else { labels=QA.pooled.labels; series=[{name:'Speedup (D/A)', col:COL_A, vals:QA.pooled.values}]; title='Pooled Speedup across 6 conditions'; yfmt='num2'; }
+
+      const vals = series.flatMap(s=>s.vals).filter(v=>Number.isFinite(v)&&v>=0);
+      const maxRaw = Math.max(...vals, 0), step = nice(maxRaw,4), ymax = Math.max(step, Math.ceil(maxRaw/Math.max(1,step))*step);
+      const ticksCount = Math.max(1, Math.round(ymax/Math.max(1,step)));
+
+      let padR=20,padT=28,padB=60,padL=60;
+      ctx.font='12px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial';
+      let maxLabelW=0;
+      for(let i=0;i<=ticksCount;i++){
+        const v=i*step, s=(yfmt==='pct1'?v.toFixed(2)+'%':(yfmt==='num2'?v.toFixed(2):v.toString()));
+        maxLabelW=Math.max(maxLabelW, ctx.measureText(s).width);
+      }
+      padL=Math.max(60, Math.ceil(maxLabelW)+16);
+      const W=cssW,H=cssH, chartW=Math.max(1,W-padL-padR), chartH=Math.max(1,H-padT-padB);
+      ctx.clearRect(0,0,W,H);
+      const border=getComputedStyle(document.documentElement).getPropertyValue('--border')||'#223041';
+      const muted=getComputedStyle(document.documentElement).getPropertyValue('--muted')||'#9fb0c8';
+      const fg=getComputedStyle(document.body).color||'#e8f0ff';
+      ctx.strokeStyle=border; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+chartH); ctx.lineTo(padL+chartW,padT+chartH); ctx.stroke();
+      ctx.fillStyle=muted; ctx.textAlign='right';
+      for(let i=0;i<=ticksCount;i++){
+        const y=padT+chartH-(i/ticksCount)*chartH;
+        ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+chartW,y); ctx.stroke();
+        const v=i*step, s=(yfmt==='pct1'?v.toFixed(2)+'%':(yfmt==='num2'?v.toFixed(2):v.toString()));
+        ctx.fillText(s, padL-6, y+4);
+      }
+      const n=labels.length, k=series.length, groupW=chartW/Math.max(1,n);
+      const barW=Math.min(26, Math.max(6, (groupW-18)/Math.max(1,k)));
+      ctx.textAlign='center';
+      labels.forEach((lab,i)=>{
+        const gx=padL + i*groupW + groupW/2;
+        series.forEach((s,j)=>{
+          const v=Number.isFinite(s.vals[i]) ? s.vals[i] : 0;
+          const h=(v/(ymax||1))*chartH;
+          const x=gx - ((k-1)/2)*barW - 4*((k-1)/2) + j*(barW+4);
+          ctx.fillStyle=s.col; ctx.fillRect(x, padT+chartH-h, barW, h);
+        });
+        ctx.fillStyle=muted; ctx.fillText(lab, gx, H-12);
+      });
+      ctx.textAlign='left'; ctx.fillStyle=fg; ctx.fillText(title, padL, 18);
+      legend.innerHTML = series.map(s=>`<span style="display:inline-block;width:10px;height:10px;background:${s.col};border-radius:2px;margin-right:6px"></span>${s.name}`).join(' &nbsp;&nbsp; ');
+
+      // Tables
+      function fmtInt(x){ return Math.round(x).toLocaleString(); }
+      function fmtF2(x){ return (Number.isFinite(x)?x:0).toFixed(2); }
+      function fmtF6(x){ return (Number.isFinite(x)?x:0).toFixed(6); }
+      function fmtPct(x){ return (Number.isFinite(x)?x:0).toFixed(2)+'%'; }
+      const perHeaders=[
+        {label:'Scenario',key:'Scenario'},{label:'A* Nodes',key:'A_nodes'},{label:'Dijkstra Nodes',key:'D_nodes'},
+        {label:'S_nodes (D/A)',key:'S_nodes'},{label:'R_nodes (%)',key:'R_nodes'},
+        {label:'A* Time (s)',key:'A_time'},{label:'Dijkstra Time (s)',key:'D_time'},
+        {label:'S_time (D/A)',key:'S_time'},{label:'R_time (%)',key:'R_time'}];
+      const perFmt={A_nodes:fmtInt,D_nodes:fmtInt,S_nodes:fmtF2,R_nodes:fmtPct,A_time:fmtF6,D_time:fmtF6,S_time:fmtF2,R_time:fmtPct};
+      const per8HTML='<caption>Per‑scenario (8×8)</caption>'+buildTable(perHeaders, QA.per8, perFmt);
+      const per30HTML='<caption>Per‑scenario (30×30)</caption>'+buildTable(perHeaders, QA.per30, perFmt);
+      const scaleHeaders=[{label:'Scenario',key:'Scenario'},{label:'Nodes',key:'Nodes'},{label:'Time (s)',key:'Time'}];
+      const scaleAHTML='<caption>Scale‑up (30×30 / 8×8) — A*</caption>'+buildTable(scaleHeaders, QA.scaleRows.A, {Nodes:fmtF2,Time:fmtF2});
+      const scaleDHTML='<caption>Scale‑up (30×30 / 8×8) — Dijkstra</caption>'+buildTable(scaleHeaders, QA.scaleRows.D, {Nodes:fmtF2,Time:fmtF2});
+      const pooledHTML=`<caption>Pooled totals & speedup</caption>
+        <table><thead><tr><th>Algorithm</th><th>Total Nodes</th><th>Total Time (s)</th></tr></thead><tbody>
+        <tr><td>A*</td><td>${fmtInt(QA.pooled.totals.A_nodes)}</td><td>${fmtF6(QA.pooled.totals.A_time)}</td></tr>
+        <tr><td>Dijkstra</td><td>${fmtInt(QA.pooled.totals.D_nodes)}</td><td>${fmtF6(QA.pooled.totals.D_time)}</td></tr>
+        <tr><td><strong>Speedup (D/A)</strong></td><td><strong>${fmtF2(QA.pooled.values[0])}</strong></td><td><strong>${fmtF2(QA.pooled.values[1])}</strong></td></tr>
+        </tbody></table>`;
+      tablesDiv.innerHTML = per8HTML + per30HTML + scaleAHTML + scaleDHTML + pooledHTML;
+    }
+    select.addEventListener('change', ()=>render(select.value));
+    window.addEventListener('resize', ()=>render(select.value));
+    render(select.value);
+  }
+
+  // Build data & draw
+  const {d8, d30} = fromTablesOrFallback();
+  const QA = compute(d8, d30);
+  drawChart('qaChart', 'qaMetric', QA);
+})();
+</script>
+
+</body>
+</html>
