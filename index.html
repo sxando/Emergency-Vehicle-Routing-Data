@@ -6,8 +6,6 @@
   <title>Analysis of A* vs Dijkstra for Emergency Vehicle Routing</title>
   <meta name="description" content="A* vs Dijkstra for emergency vehicle routing on grid maps, with figures, results, and downloads.">
   
-
-
 <style>
 :root {
   --bg: #0b0f14; --card: #111826; --muted: #9fb0c8; --text: #e8f0ff;
@@ -31,11 +29,13 @@ nav { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
 .btn:hover { border-color: var(--accent); }
 section.card { background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 24px; margin: 18px 0; }
 h2 { font-size: 1.4rem; margin-top: 0; }
+h3 { font-size: 1.2rem; margin-top: 24px; margin-bottom: 12px; }
+h4 { font-size: 1.1rem; margin-top: 20px; margin-bottom: 8px; color: var(--accent); }
 .grid-figs { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 16px; }
 figure { background:#0c1320; border:1px solid var(--border); border-radius:12px; padding:12px; margin:0; }
 img { width:100%; height:auto; border-radius:8px; display:block; }
 figcaption { font-size:.9rem; color: var(--muted); margin-top: 8px; }
-.tbl { width:100%; border-collapse: collapse; overflow:auto; }
+.tbl { width:100%; border-collapse: collapse; overflow:auto; margin: 12px 0; }
 .tbl th, .tbl td { border:1px solid var(--border); padding:10px 12px; text-align:center; }
 .tbl thead th { background:#0f172a; }
 .tbl .sub th { background:#0f172a; color: var(--muted); font-weight: normal; }
@@ -70,6 +70,7 @@ a.figlink figure:hover{border-color:#60a5fa}
         <a class="btn" href="#figures">Figures (8×8 Grid)</a>
         <a class="btn" href="#results30">Results (30×30 Grid)</a>
         <a class="btn" href="#figures30">Figures (30×30 Grid)</a>
+        <a class="btn" href="#quantitative">Quantitative Analysis</a>
         <a class="btn" href="#downloads">Downloads</a>
       </nav>
     </header>
@@ -77,7 +78,7 @@ a.figlink figure:hover{border-color:#60a5fa}
     <section id="abstract" class="card">
       <h2>Abstract</h2>
       <p>We evaluate the <strong>A*</strong> search algorithm for emergency vehicle routing
-      on grid-based urban maps and compare it against Dijkstra’s algorithm. The study
+      on grid-based urban maps and compare it against Dijkstra's algorithm. The study
       tests three conditions—0%, ~20%, and ~50% obstacle density—measuring expanded
       nodes and computation time. We use a Manhattan-distance heuristic for A*, which
       is admissible and returns optimal shortest paths on 4-neighborhood grids.</p>
@@ -121,42 +122,35 @@ a.figlink figure:hover{border-color:#60a5fa}
     </tr>
   </thead>
   <tbody>
-    
-        <tr>
-          <td>No Obstacles (0%)</td>
-          <td>0.0%</td>
-          <td>100.0%</td>
-          <td>14</td>
-          <td>0.000021s</td>
-          <td>63</td>
-          <td>0.000109s</td>
-        </tr>
-        
-
-        <tr>
-          <td>Moderate Obstacles (20%)</td>
-          <td>15.6%</td>
-          <td>84.4%</td>
-          <td>15</td>
-          <td>0.000078s</td>
-          <td>53</td>
-          <td>0.000174s</td>
-        </tr>
-        
-
-        <tr>
-          <td>High Obstacles (50%)</td>
-          <td>42.2%</td>
-          <td>57.8%</td>
-          <td>25</td>
-          <td>0.000068s</td>
-          <td>34</td>
-          <td>0.000075s</td>
-        </tr>
-        
+    <tr>
+      <td>No Obstacles (0%)</td>
+      <td>0.0%</td>
+      <td>100.0%</td>
+      <td>14</td>
+      <td>0.000021s</td>
+      <td>63</td>
+      <td>0.000109s</td>
+    </tr>
+    <tr>
+      <td>Moderate Obstacles (20%)</td>
+      <td>15.6%</td>
+      <td>84.4%</td>
+      <td>15</td>
+      <td>0.000078s</td>
+      <td>53</td>
+      <td>0.000174s</td>
+    </tr>
+    <tr>
+      <td>High Obstacles (50%)</td>
+      <td>42.2%</td>
+      <td>57.8%</td>
+      <td>25</td>
+      <td>0.000068s</td>
+      <td>34</td>
+      <td>0.000075s</td>
+    </tr>
   </tbody>
 </table>
-
     </section>
 
     <section id="figures" class="card">
@@ -169,7 +163,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fastar_20.png&alt=20%25+Obstacles+%E2%80%94+A%2A" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/astar_20.png" alt="20% Obstacles — A*" loading="lazy">
@@ -177,7 +170,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fastar_50.png&alt=50%25+Obstacles+%E2%80%94+A%2A" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/astar_50.png" alt="50% Obstacles — A*" loading="lazy">
@@ -185,7 +177,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fdijkstra_0.png&alt=No+Obstacles+%280%25%29+%E2%80%94+Dijkstra" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/dijkstra_0.png" alt="No Obstacles (0%) — Dijkstra" loading="lazy">
@@ -193,7 +184,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fdijkstra_20.png&alt=20%25+Obstacles+%E2%80%94+Dijkstra" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/dijkstra_20.png" alt="20% Obstacles — Dijkstra" loading="lazy">
@@ -201,7 +191,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fdijkstra_50.png&alt=50%25+Obstacles+%E2%80%94+Dijkstra" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/dijkstra_50.png" alt="50% Obstacles — Dijkstra" loading="lazy">
@@ -245,42 +234,35 @@ a.figlink figure:hover{border-color:#60a5fa}
     </tr>
   </thead>
   <tbody>
-    
-        <tr>
-          <td>No Obstacles (0%)</td>
-          <td>0.0%</td>
-          <td>100.0%</td>
-          <td>59</td>
-          <td>0.000108s</td>
-          <td>899</td>
-          <td>0.001187s</td>
-        </tr>
-        
-
-        <tr>
-          <td>Moderate Obstacles (20%)</td>
-          <td>20.7%</td>
-          <td>79.3%</td>
-          <td>78</td>
-          <td>0.000314s</td>
-          <td>710</td>
-          <td>0.002126s</td>
-        </tr>
-        
-
-        <tr>
-          <td>High Obstacles (50%)</td>
-          <td>47.3%</td>
-          <td>52.7%</td>
-          <td>111</td>
-          <td>0.000155s</td>
-          <td>208</td>
-          <td>0.000288s</td>
-        </tr>
-        
+    <tr>
+      <td>No Obstacles (0%)</td>
+      <td>0.0%</td>
+      <td>100.0%</td>
+      <td>59</td>
+      <td>0.000108s</td>
+      <td>899</td>
+      <td>0.001187s</td>
+    </tr>
+    <tr>
+      <td>Moderate Obstacles (20%)</td>
+      <td>20.7%</td>
+      <td>79.3%</td>
+      <td>78</td>
+      <td>0.000314s</td>
+      <td>710</td>
+      <td>0.002126s</td>
+    </tr>
+    <tr>
+      <td>High Obstacles (50%)</td>
+      <td>47.3%</td>
+      <td>52.7%</td>
+      <td>111</td>
+      <td>0.000155s</td>
+      <td>208</td>
+      <td>0.000288s</td>
+    </tr>
   </tbody>
 </table>
-
     </section>
 
     <section id="figures30" class="card">
@@ -293,7 +275,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fastar_30_20.png&alt=20%25+Obstacles+%E2%80%94+A%2A+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/astar_30_20.png" alt="20% Obstacles — A* (30×30 Grid)" loading="lazy">
@@ -301,7 +282,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fastar_30_50.png&alt=50%25+Obstacles+%E2%80%94+A%2A+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/astar_30_50.png" alt="50% Obstacles — A* (30×30 Grid)" loading="lazy">
@@ -309,7 +289,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fdijkstra_30_0.png&alt=No+Obstacles+%280%25%29+%E2%80%94+Dijkstra+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/dijkstra_30_0.png" alt="No Obstacles (0%) — Dijkstra (30×30 Grid)" loading="lazy">
@@ -317,7 +296,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fdijkstra_30_20.png&alt=20%25+Obstacles+%E2%80%94+Dijkstra+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/dijkstra_30_20.png" alt="20% Obstacles — Dijkstra (30×30 Grid)" loading="lazy">
@@ -325,7 +303,6 @@ a.figlink figure:hover{border-color:#60a5fa}
       </figure>
     </a>
     
-
     <a class="figlink" href="viewer.html?src=images%2Fdijkstra_30_50.png&alt=50%25+Obstacles+%E2%80%94+Dijkstra+%2830%C3%9730+Grid%29" target="_blank" rel="noopener">
       <figure class="zoomable">
         <img src="images/dijkstra_30_50.png" alt="50% Obstacles — Dijkstra (30×30 Grid)" loading="lazy">
@@ -335,7 +312,331 @@ a.figlink figure:hover{border-color:#60a5fa}
     </div>
     </section>
 
-    
+    <section id="quantitative" class="card">
+      <h2>Quantitative Analysis of A* and Dijkstra</h2>
+      
+      <!-- Speedup Analysis Box -->
+      <section class="card">
+        <h3>Speedup Analysis</h3>
+        <div class="card" style="background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <label for="speedupMetric"><strong>Metric:</strong></label>
+            <select id="speedupMetric" class="chart-select">
+              <option value="NodesSpeedup">Nodes Speedup (Dijkstra/A*)</option>
+              <option value="TimeSpeedup">Time Speedup (Dijkstra/A*)</option>
+            </select>
+            <span style="color:var(--muted)">Higher bars indicate greater A* advantage.</span>
+          </div>
+          <canvas id="speedupChart" width="980" height="360" style="max-width:100%;margin-top:10px;display:block"></canvas>
+          <div class="legend" style="margin-top:8px;color:var(--muted)">
+            <span style="display:inline-block;width:10px;height:10px;background:#f59e0b;border-radius:2px;margin-right:6px"></span>8×8 Grid &nbsp;&nbsp;
+            <span style="display:inline-block;width:10px;height:10px;background:#8b5cf6;border-radius:2px;margin-right:6px"></span>30×30 Grid
+          </div>
+        </div>
+
+        <h4>Node Expansion Speedup (Dijkstra ÷ A*)</h4>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>8×8 Grid</th>
+              <th>30×30 Grid</th>
+              <th>Improvement Factor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>No Obstacles (0%)</td>
+              <td>4.50×</td>
+              <td>15.24×</td>
+              <td>3.39× better on larger grid</td>
+            </tr>
+            <tr>
+              <td>Moderate Obstacles (20%)</td>
+              <td>3.53×</td>
+              <td>9.10×</td>
+              <td>2.58× better on larger grid</td>
+            </tr>
+            <tr>
+              <td>High Obstacles (50%)</td>
+              <td>1.36×</td>
+              <td>1.87×</td>
+              <td>1.38× better on larger grid</td>
+            </tr>
+            <tr style="background:#0f172a;">
+              <td><strong>Average</strong></td>
+              <td><strong>3.13×</strong></td>
+              <td><strong>8.74×</strong></td>
+              <td><strong>2.79× better scaling</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Time Speedup (Dijkstra Time ÷ A* Time)</h4>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>8×8 Grid</th>
+              <th>30×30 Grid</th>
+              <th>Improvement Factor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>No Obstacles (0%)</td>
+              <td>5.19×</td>
+              <td>10.99×</td>
+              <td>2.12× better on larger grid</td>
+            </tr>
+            <tr>
+              <td>Moderate Obstacles (20%)</td>
+              <td>2.23×</td>
+              <td>6.77×</td>
+              <td>3.04× better on larger grid</td>
+            </tr>
+            <tr>
+              <td>High Obstacles (50%)</td>
+              <td>1.10×</td>
+              <td>1.86×</td>
+              <td>1.69× better on larger grid</td>
+            </tr>
+            <tr style="background:#0f172a;">
+              <td><strong>Average</strong></td>
+              <td><strong>2.84×</strong></td>
+              <td><strong>6.54×</strong></td>
+              <td><strong>2.30× better scaling</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Scale-up Factor Analysis Box -->
+      <section class="card">
+        <h3>Scale-up Factor Analysis (30×30 Cost ÷ 8×8 Cost)</h3>
+        <div class="card" style="background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <label for="scaleMetric"><strong>Metric:</strong></label>
+            <select id="scaleMetric" class="chart-select">
+              <option value="NodesScale">Nodes Scale Factor</option>
+              <option value="TimeScale">Time Scale Factor</option>
+            </select>
+            <span style="color:var(--muted)">How much more work when grid size increases.</span>
+          </div>
+          <canvas id="scaleChart" width="980" height="360" style="max-width:100%;margin-top:10px;display:block"></canvas>
+          <div class="legend" style="margin-top:8px;color:var(--muted)">
+            <span style="display:inline-block;width:10px;height:10px;background:#4f83ff;border-radius:2px;margin-right:6px"></span>A* &nbsp;&nbsp;
+            <span style="display:inline-block;width:10px;height:10px;background:#34d399;border-radius:2px;margin-right:6px"></span>Dijkstra
+          </div>
+        </div>
+        
+        <h4>Node Expansion Scale Factors</h4>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>A* Scale Factor</th>
+              <th>Dijkstra Scale Factor</th>
+              <th>Dijkstra Penalty</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>No Obstacles (0%)</td>
+              <td>4.21×</td>
+              <td>14.27×</td>
+              <td>3.39× worse scaling</td>
+            </tr>
+            <tr>
+              <td>Moderate Obstacles (20%)</td>
+              <td>5.20×</td>
+              <td>13.40×</td>
+              <td>2.58× worse scaling</td>
+            </tr>
+            <tr>
+              <td>High Obstacles (50%)</td>
+              <td>4.44×</td>
+              <td>6.12×</td>
+              <td>1.38× worse scaling</td>
+            </tr>
+            <tr style="background:#0f172a;">
+              <td><strong>Scenario-Balanced Average</strong></td>
+              <td><strong>4.59×</strong></td>
+              <td><strong>12.11×</strong></td>
+              <td><strong>2.64× worse scaling</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Runtime Scale Factors</h4>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>A* Scale Factor</th>
+              <th>Dijkstra Scale Factor</th>
+              <th>Dijkstra Penalty</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>No Obstacles (0%)</td>
+              <td>5.14×</td>
+              <td>10.89×</td>
+              <td>2.12× worse scaling</td>
+            </tr>
+            <tr>
+              <td>Moderate Obstacles (20%)</td>
+              <td>4.03×</td>
+              <td>12.22×</td>
+              <td>3.03× worse scaling</td>
+            </tr>
+            <tr>
+              <td>High Obstacles (50%)</td>
+              <td>2.28×</td>
+              <td>3.84×</td>
+              <td>1.68× worse scaling</td>
+            </tr>
+            <tr style="background:#0f172a;">
+              <td><strong>Scenario-Balanced Average</strong></td>
+              <td><strong>3.46×</strong></td>
+              <td><strong>10.06×</strong></td>
+              <td><strong>2.91× worse scaling</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Efficiency Gains Box -->
+      <section class="card">
+        <h3>Efficiency Gains (A* Reductions vs Dijkstra)</h3>
+        <div class="card" style="background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <label for="efficiencyMetric"><strong>Metric:</strong></label>
+            <select id="efficiencyMetric" class="chart-select">
+              <option value="NodesReduction">Node Expansion Reduction (%)</option>
+              <option value="TimeReduction">Runtime Reduction (%)</option>
+            </select>
+            <span style="color:var(--muted)">Percentage reduction achieved by A*.</span>
+          </div>
+          <canvas id="efficiencyChart" width="980" height="360" style="max-width:100%;margin-top:10px;display:block"></canvas>
+          <div class="legend" style="margin-top:8px;color:var(--muted)">
+            <span style="display:inline-block;width:10px;height:10px;background:#f59e0b;border-radius:2px;margin-right:6px"></span>8×8 Grid &nbsp;&nbsp;
+            <span style="display:inline-block;width:10px;height:10px;background:#8b5cf6;border-radius:2px;margin-right:6px"></span>30×30 Grid
+          </div>
+        </div>
+
+        <h4>Node Expansion Reductions</h4>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Grid Size</th>
+              <th>No Obstacles (0%)</th>
+              <th>Moderate Obstacles (20%)</th>
+              <th>High Obstacles (50%)</th>
+              <th>Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>8×8 Grid</td>
+              <td>77.78%</td>
+              <td>71.70%</td>
+              <td style="color:#fbbf24">26.47%</td>
+              <td><strong>58.65%</strong></td>
+            </tr>
+            <tr>
+              <td>30×30 Grid</td>
+              <td>93.44%</td>
+              <td>89.01%</td>
+              <td>46.63%</td>
+              <td><strong>76.36%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Runtime Reductions</h4>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Grid Size</th>
+              <th>No Obstacles (0%)</th>
+              <th>Moderate Obstacles (20%)</th>
+              <th>High Obstacles (50%)</th>
+              <th>Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>8×8 Grid</td>
+              <td>80.73%</td>
+              <td>55.17%</td>
+              <td style="color:#fbbf24">9.33%</td>
+              <td><strong>48.41%</strong></td>
+            </tr>
+            <tr>
+              <td>30×30 Grid</td>
+              <td>90.90%</td>
+              <td>85.23%</td>
+              <td>46.18%</td>
+              <td><strong>74.10%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Overall Performance Box -->
+      <section class="card">
+        <h3>Overall Performance (Pooled Across All Scenarios)</h3>
+        <div class="card" style="background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px">
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <label for="pooledMetric"><strong>Metric:</strong></label>
+            <select id="pooledMetric" class="chart-select">
+              <option value="TotalNodes">Total Node Expansions</option>
+              <option value="TotalTime">Total Runtime (sec)</option>
+            </select>
+            <span style="color:var(--muted)">Aggregated performance across all test conditions.</span>
+          </div>
+          <canvas id="pooledChart" width="980" height="360" style="max-width:100%;margin-top:10px;display:block"></canvas>
+          <div class="legend" style="margin-top:8px;color:var(--muted)">
+            <span style="display:inline-block;width:10px;height:10px;background:#4f83ff;border-radius:2px;margin-right:6px"></span>A* &nbsp;&nbsp;
+            <span style="display:inline-block;width:10px;height:10px;background:#34d399;border-radius:2px;margin-right:6px"></span>Dijkstra
+          </div>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>A* Total</th>
+              <th>Dijkstra Total</th>
+              <th>Speedup Factor</th>
+              <th>A* Reduction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Node Expansions</strong></td>
+              <td>302 nodes</td>
+              <td>1,967 nodes</td>
+              <td>6.51×</td>
+              <td>84.68%</td>
+            </tr>
+            <tr>
+              <td><strong>Runtime</strong></td>
+              <td>0.000744 sec</td>
+              <td>0.003959 sec</td>
+              <td>5.32×</td>
+              <td>81.28%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout" style="margin-top:16px">
+          <strong>Key Findings:</strong> A* consistently outperforms Dijkstra across all scenarios. The advantage is most pronounced in open environments (no obstacles) and scales better with grid size. On average, A* uses <strong>84.68% fewer node expansions</strong> and runs <strong>81.28% faster</strong> than Dijkstra when pooled across all test conditions.
+        </div>
+      </section>
+    </section>
 
 <section id="downloads" class="card">
   <h2>Downloads & Data</h2>
@@ -359,10 +660,8 @@ a.figlink figure:hover{border-color:#60a5fa}
   </ul>
 </section>
 
-
-
     <footer>
-      © 2025 Sean. Built as CS5800 Project.
+      © 2025 Sean Ando, Ngoc Khanh Vy Le, Divit Pratap Singh, Aayushi Saraswat, Zuzu Nyirakanyange. Built as CS5800 Project.
     </footer>
   </div>
 
@@ -484,7 +783,15 @@ a.figlink figure:hover{border-color:#60a5fa}
         const hD = (g.d / ymax) * chartH;
         ctx.fillStyle = colA; ctx.fillRect(gx - barW - 4, padT + chartH - hA, barW, hA);
         ctx.fillStyle = colD; ctx.fillRect(gx + 4, padT + chartH - hD, barW, hD);
-        ctx.fillStyle = muted; ctx.fillText(g.scenario, gx, H - 10);
+        
+        // Use shorter labels for chart display
+        let displayLabel = g.scenario;
+        if (g.scenario.includes('No Obstacles')) displayLabel = 'No Obstacles (0%)';
+        else if (g.scenario.includes('Moderate')) displayLabel = 'Moderate Obstacles (20%)';
+        else if (g.scenario.includes('High')) displayLabel = 'High Obstacles (50%)';
+        
+        ctx.fillStyle = muted; 
+        ctx.fillText(displayLabel, gx, H - 10);
       });
 
       // Title
@@ -502,6 +809,266 @@ a.figlink figure:hover{border-color:#60a5fa}
   const DATA30 = parseTable('results30');
   makeBarChart('chart8','metric8',DATA8);
   makeBarChart('chart30','metric30',DATA30);
+
+  // Quantitative analysis data
+  const SPEEDUP_DATA = [
+    // 8x8 Grid
+    {Grid: '8×8', Scenario: 'No Obstacles (0%)', NodesSpeedup: 4.50, TimeSpeedup: 5.19},
+    {Grid: '8×8', Scenario: 'Moderate Obstacles (20%)', NodesSpeedup: 3.53, TimeSpeedup: 2.23},
+    {Grid: '8×8', Scenario: 'High Obstacles (50%)', NodesSpeedup: 1.36, TimeSpeedup: 1.10},
+    // 30x30 Grid  
+    {Grid: '30×30', Scenario: 'No Obstacles (0%)', NodesSpeedup: 15.24, TimeSpeedup: 10.99},
+    {Grid: '30×30', Scenario: 'Moderate Obstacles (20%)', NodesSpeedup: 9.10, TimeSpeedup: 6.77},
+    {Grid: '30×30', Scenario: 'High Obstacles (50%)', NodesSpeedup: 1.87, TimeSpeedup: 1.86}
+  ];
+
+  const SCALE_DATA = [
+    {Scenario: 'No Obstacles (0%)', Algorithm: 'A*', NodesScale: 4.21, TimeScale: 5.14},
+    {Scenario: 'Moderate Obstacles (20%)', Algorithm: 'A*', NodesScale: 5.20, TimeScale: 4.03},
+    {Scenario: 'High Obstacles (50%)', Algorithm: 'A*', NodesScale: 4.44, TimeScale: 2.28},
+    {Scenario: 'No Obstacles (0%)', Algorithm: 'Dijkstra', NodesScale: 14.27, TimeScale: 10.89},
+    {Scenario: 'Moderate Obstacles (20%)', Algorithm: 'Dijkstra', NodesScale: 13.40, TimeScale: 12.22},
+    {Scenario: 'High Obstacles (50%)', Algorithm: 'Dijkstra', NodesScale: 6.12, TimeScale: 3.84}
+  ];
+
+  const EFFICIENCY_DATA = [
+    {Grid: '8×8', Scenario: 'No Obstacles (0%)', NodesReduction: 77.78, TimeReduction: 80.73},
+    {Grid: '8×8', Scenario: 'Moderate Obstacles (20%)', NodesReduction: 71.70, TimeReduction: 55.17},
+    {Grid: '8×8', Scenario: 'High Obstacles (50%)', NodesReduction: 26.47, TimeReduction: 9.33},
+    {Grid: '30×30', Scenario: 'No Obstacles (0%)', NodesReduction: 93.44, TimeReduction: 90.90},
+    {Grid: '30×30', Scenario: 'Moderate Obstacles (20%)', NodesReduction: 89.01, TimeReduction: 85.23},
+    {Grid: '30×30', Scenario: 'High Obstacles (50%)', NodesReduction: 46.63, TimeReduction: 46.18}
+  ];
+
+  function makeQuantChart(canvasId, selectId, data, scenarios, getValues, yLabel, color1, color2){
+    const canvas = document.getElementById(canvasId);
+    const select = document.getElementById(selectId);
+    if(!canvas || !select) return;
+    const ctx = canvas.getContext('2d');
+
+    function draw(metric){
+      const DPR = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || canvas.width;
+      const cssH = canvas.clientHeight || canvas.height;
+      canvas.width = Math.max(1, Math.floor(cssW * DPR));
+      canvas.height = Math.max(1, Math.floor(cssH * DPR));
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(DPR, DPR);
+
+      const W = cssW, H = cssH;
+      let padR = 20, padT = 22, padB = 48, padL = 60;
+
+      const groups = scenarios.map(sc => getValues(sc, metric, data));
+      const vals = groups.flatMap(g => Object.values(g).filter(v => typeof v === 'number'));
+      const maxRaw = Math.max(...vals, 0);
+      let step = niceStep(maxRaw, 5);
+      let ymax = Math.max(step, Math.ceil(maxRaw / step) * step);
+      let ticksCount = Math.round(ymax / step);
+
+      const chartW = Math.max(1, W - padL - padR);
+      const chartH = Math.max(1, H - padT - padB);
+
+      ctx.clearRect(0,0,W,H);
+      const border = '#223041', muted = '#9fb0c8', fg = '#e8f0ff';
+
+      // Axes + grid
+      ctx.strokeStyle = border; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+chartH); ctx.lineTo(padL+chartW, padT+chartH); ctx.stroke();
+      ctx.fillStyle = muted; ctx.textAlign='right'; ctx.font = '12px system-ui';
+      for(let i=0;i<=ticksCount;i++){
+        const y = padT + chartH - (i/ticksCount)*chartH;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+chartW, y); ctx.stroke();
+        ctx.fillText((i * step).toFixed(1), padL-6, y+4);
+      }
+
+      // Bars - use provided colors or default to blue/green
+      const col1 = color1 || '#4f83ff', col2 = color2 || '#34d399';
+      const n = scenarios.length;
+      const groupW = chartW / Math.max(1, n);
+      const barW = Math.min(30, Math.max(6, (groupW - 16)/2));
+      ctx.textAlign = 'center';
+      groups.forEach((g,i) => {
+        const gx = padL + i*groupW + groupW/2;
+        const vals = Object.values(g).filter(v => typeof v === 'number');
+        const h1 = (vals[0] / ymax) * chartH;
+        const h2 = (vals[1] / ymax) * chartH;
+        ctx.fillStyle = col1; ctx.fillRect(gx - barW - 3, padT + chartH - h1, barW, h1);
+        ctx.fillStyle = col2; ctx.fillRect(gx + 3, padT + chartH - h2, barW, h2);
+        
+        // Use shorter scenario labels
+        let displayLabel = g.scenario;
+        if (g.scenario.includes('No Obstacles')) displayLabel = 'No Obstacles (0%)';
+        else if (g.scenario.includes('Moderate')) displayLabel = 'Moderate Obstacles (20%)';
+        else if (g.scenario.includes('High')) displayLabel = 'High Obstacles (50%)';
+        else if (g.scenario === 'Average' && canvasId === 'scaleChart') displayLabel = 'Balanced Average';
+        else if (g.scenario === 'Average') displayLabel = 'Average';
+        
+        ctx.fillStyle = muted; 
+        ctx.font = '12px system-ui';
+        ctx.fillText(displayLabel, gx, H - 10);
+      });
+
+      ctx.textAlign = 'left'; ctx.fillStyle = fg;
+      ctx.fillText(yLabel(metric), padL, 16);
+    }
+
+    select.addEventListener('change', () => draw(select.value));
+    draw(select.value);
+    window.addEventListener('resize', () => draw(select.value));
+  }
+
+  // Speedup Chart (Grid size comparison - use amber/purple) - INCLUDE AVERAGE
+  makeQuantChart('speedupChart', 'speedupMetric', SPEEDUP_DATA, 
+    ['No Obstacles (0%)', 'Moderate Obstacles (20%)', 'High Obstacles (50%)', 'Average'],
+    (sc, metric, data) => {
+      if (sc === 'Average') {
+        // Calculate averages
+        const grid8Avg = (4.50 + 3.53 + 1.36) / 3; // 3.13
+        const grid30Avg = (15.24 + 9.10 + 1.87) / 3; // 8.74
+        const time8Avg = (5.19 + 2.23 + 1.10) / 3; // 2.84
+        const time30Avg = (10.99 + 6.77 + 1.86) / 3; // 6.54
+        return {
+          scenario: sc,
+          grid8: metric === 'NodesSpeedup' ? grid8Avg : time8Avg,
+          grid30: metric === 'NodesSpeedup' ? grid30Avg : time30Avg
+        };
+      }
+      return {
+        scenario: sc,
+        grid8: data.find(d => d.Grid === '8×8' && d.Scenario === sc)?.[metric] || 0,
+        grid30: data.find(d => d.Grid === '30×30' && d.Scenario === sc)?.[metric] || 0
+      };
+    },
+    (metric) => metric === 'NodesSpeedup' ? 'Speedup Factor (Dijkstra/A*)' : 'Time Speedup Factor',
+    '#f59e0b', '#8b5cf6'
+  );
+
+  // Scale Chart (Algorithm comparison - use blue/green) - INCLUDE AVERAGE
+  makeQuantChart('scaleChart', 'scaleMetric', SCALE_DATA,
+    ['No Obstacles (0%)', 'Moderate Obstacles (20%)', 'High Obstacles (50%)', 'Average'],
+    (sc, metric, data) => {
+      if (sc === 'Average') {
+        // Scenario-balanced averages
+        const astarNodesAvg = (4.21 + 5.20 + 4.44) / 3; // 4.59
+        const dijkstraNodesAvg = (14.27 + 13.40 + 6.12) / 3; // 12.11
+        const astarTimeAvg = (5.14 + 4.03 + 2.28) / 3; // 3.46
+        const dijkstraTimeAvg = (10.89 + 12.22 + 3.84) / 3; // 10.06
+        return {
+          scenario: sc,
+          astar: metric === 'NodesScale' ? astarNodesAvg : astarTimeAvg,
+          dijkstra: metric === 'NodesScale' ? dijkstraNodesAvg : dijkstraTimeAvg
+        };
+      }
+      return {
+        scenario: sc,
+        astar: data.find(d => d.Algorithm === 'A*' && d.Scenario === sc)?.[metric] || 0,
+        dijkstra: data.find(d => d.Algorithm === 'Dijkstra' && d.Scenario === sc)?.[metric] || 0
+      };
+    },
+    (metric) => metric === 'NodesScale' ? 'Scale Factor (30×30 cost / 8×8 cost)' : 'Time Scale Factor',
+    '#4f83ff', '#34d399'
+  );
+
+  // Efficiency Chart (Grid size comparison - use amber/purple) - INCLUDE AVERAGE
+  makeQuantChart('efficiencyChart', 'efficiencyMetric', EFFICIENCY_DATA,
+    ['No Obstacles (0%)', 'Moderate Obstacles (20%)', 'High Obstacles (50%)', 'Average'],
+    (sc, metric, data) => {
+      if (sc === 'Average') {
+        // Grid averages
+        const grid8NodesAvg = (77.78 + 71.70 + 26.47) / 3; // 58.65
+        const grid30NodesAvg = (93.44 + 89.01 + 46.63) / 3; // 76.36
+        const grid8TimeAvg = (80.73 + 55.17 + 9.33) / 3; // 48.41
+        const grid30TimeAvg = (90.90 + 85.23 + 46.18) / 3; // 74.10
+        return {
+          scenario: sc,
+          grid8: metric === 'NodesReduction' ? grid8NodesAvg : grid8TimeAvg,
+          grid30: metric === 'NodesReduction' ? grid30NodesAvg : grid30TimeAvg
+        };
+      }
+      return {
+        scenario: sc,
+        grid8: data.find(d => d.Grid === '8×8' && d.Scenario === sc)?.[metric] || 0,
+        grid30: data.find(d => d.Grid === '30×30' && d.Scenario === sc)?.[metric] || 0
+      };
+    },
+    (metric) => metric === 'NodesReduction' ? 'Node Expansion Reduction (%)' : 'Runtime Reduction (%)',
+    '#f59e0b', '#8b5cf6'
+  );
+
+  // Pooled Chart
+  function makePooledChart(){
+    const canvas = document.getElementById('pooledChart');
+    const select = document.getElementById('pooledMetric');
+    if(!canvas || !select) return;
+    const ctx = canvas.getContext('2d');
+
+    const POOLED_DATA = {
+      TotalNodes: {astar: 302, dijkstra: 1967},
+      TotalTime: {astar: 0.000744, dijkstra: 0.003959}
+    };
+
+    function draw(metric){
+      const DPR = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || canvas.width;
+      const cssH = canvas.clientHeight || canvas.height;
+      canvas.width = Math.max(1, Math.floor(cssW * DPR));
+      canvas.height = Math.max(1, Math.floor(cssH * DPR));
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(DPR, DPR);
+
+      const W = cssW, H = cssH;
+      let padR = 20, padT = 22, padB = 48, padL = 80;
+
+      const astar = POOLED_DATA[metric].astar;
+      const dijkstra = POOLED_DATA[metric].dijkstra;
+      const maxRaw = Math.max(astar, dijkstra);
+      let step = niceStep(maxRaw, 5);
+      let ymax = Math.max(step, Math.ceil(maxRaw / step) * step);
+      let ticksCount = Math.round(ymax / step);
+
+      const chartW = Math.max(1, W - padL - padR);
+      const chartH = Math.max(1, H - padT - padB);
+
+      ctx.clearRect(0,0,W,H);
+      const border = '#223041', muted = '#9fb0c8', fg = '#e8f0ff';
+
+      // Axes + grid
+      ctx.strokeStyle = border; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+chartH); ctx.lineTo(padL+chartW, padT+chartH); ctx.stroke();
+      ctx.fillStyle = muted; ctx.textAlign='right'; ctx.font = '12px system-ui';
+      for(let i=0;i<=ticksCount;i++){
+        const y = padT + chartH - (i/ticksCount)*chartH;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+chartW, y); ctx.stroke();
+        const val = i * step;
+        const label = metric === 'TotalTime' ? val.toFixed(6) : String(Math.round(val));
+        ctx.fillText(label, padL-6, y+4);
+      }
+
+      // Bars
+      const colA = '#4f83ff', colD = '#34d399';
+      const centerX = padL + chartW/2;
+      const barW = 80;
+      const hA = (astar / ymax) * chartH;
+      const hD = (dijkstra / ymax) * chartH;
+      
+      ctx.fillStyle = colA; ctx.fillRect(centerX - barW - 20, padT + chartH - hA, barW, hA);
+      ctx.fillStyle = colD; ctx.fillRect(centerX + barW/2 + 20, padT + chartH - hD, barW, hD);
+      
+      ctx.textAlign = 'center'; ctx.fillStyle = muted;
+      ctx.fillText('A*', centerX - barW/2 - 20, H - 8);
+      ctx.fillText('Dijkstra', centerX + barW/2 + 20, H - 8);
+
+      ctx.textAlign = 'left'; ctx.fillStyle = fg;
+      const title = metric === 'TotalNodes' ? 'Total Node Expansions' : 'Total Runtime (sec)';
+      ctx.fillText(title, padL, 16);
+    }
+
+    select.addEventListener('change', () => draw(select.value));
+    draw(select.value);
+    window.addEventListener('resize', () => draw(select.value));
+  }
+
+  makePooledChart();
 })();
 </script>
 
